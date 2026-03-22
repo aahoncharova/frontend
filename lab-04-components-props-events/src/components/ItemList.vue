@@ -1,13 +1,17 @@
 <template>
   <div class="item-list">
-    <h3>Your Tasks</h3>
-    <ItemRow />
+    <ItemRow 
+      v-for="task in tasks" 
+      :key="task.id" 
+      :task="task" 
+    />
   </div>
 </template>
 
 <script>
-    import ItemRow from './ItemRow.vue';
-    export default {
+  import ItemRow from './ItemRow.vue';
+  export default {
+    props: { tasks: Array },
     components: { ItemRow }
-    };
+  };
 </script>

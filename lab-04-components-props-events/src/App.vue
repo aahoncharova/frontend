@@ -7,19 +7,19 @@
 </template>
 
 <script>
-import ItemForm from './components/ItemForm.vue';
-import ItemList from './components/ItemList.vue';
+  import ItemForm from './components/ItemForm.vue';
+  import ItemList from './components/ItemList.vue';
 
-export default {
-  components: { ItemForm, ItemList },
-  data() {
-    return {
-      tasks: [
-        { id: 1, title: 'Learn Props', completed: true },
-        { id: 2, title: 'Understand Emits', completed: false },
-        { id: 3, title: 'Component Communication', completed: false }
-      ]
+  export default {
+    components: { ItemForm, ItemList },
+    data() {
+      return {
+        tasks: [
+          { id: 1, title: 'Learn Props', completed: true },
+          { id: 2, title: 'Understand Emits', completed: false },
+          { id: 3, title: 'Component Communication', completed: false }
+        ]
+      }
     }
-  }
-};
+  };
 </script>
