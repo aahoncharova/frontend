@@ -2,10 +2,9 @@ import { defineStore } from 'pinia'
 
 export const useTaskStore = defineStore('taskStore', {
   state: () => ({
-    tasks: [
-      { id: 1, title: 'Learn Pinia basics', done: false },
-      { id: 2, title: 'Setup global state', done: true }
-    ]
+    tasks: [],
+    filter: 'all'
+
   }),
   actions: {
     addTask(title) {
@@ -22,5 +21,15 @@ export const useTaskStore = defineStore('taskStore', {
     removeTask(id) {
       this.tasks = this.tasks.filter(t => t.id !== id)
     }
+  },
+  getters: {
+    filteredTasks() {
+        if (this.filter === 'done') return this.tasks.filter(t => t.done)
+        if (this.filter === 'active') return this.tasks.filter(t => !t.done)
+        return this.tasks
+    },
+    totalCount: (state) => state.tasks.length,
+    doneCount: (state) => state.tasks.filter(t => t.done).length,
+    activeCount: (state) => state.tasks.filter(t => !t.done).length
   }
 })
