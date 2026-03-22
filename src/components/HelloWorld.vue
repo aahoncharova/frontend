@@ -1,40 +1,66 @@
 <template>
   <div class="lab-03">
     <section class="task-section">
-      <h2>Task 2: v-if vs v-show</h2>
-      <div class="controls">
-        <button @click="isPanelVisible = !isPanelVisible">Toggle Visibility</button>
+      <h2>Task 3: Product List</h2>
+      
+      <div class="input-card">
+        <input v-model="newProductName" placeholder="Назва товару..." class="custom-input">
+        <select v-model="newProductCategory" class="custom-select">
+          <option value="Fruit">Fruit</option>
+          <option value="Vegetable">Vegetable</option>
+        </select>
+        <button @click="addProduct" class="btn-add">Add</button>
       </div>
 
-      <div v-if="isPanelVisible" class="panel panel-if">
-        <strong>v-if:</strong> I delete completely from the DOM tree.
-      </div>
-
-      <div v-show="isPanelVisible" class="panel panel-show">
-        <strong>v-show:</strong> I stay in the DOM, but get display: none.
+      <div class="product-grid">
+        <div 
+          v-for="p in products" 
+          :key="p.id" 
+          class="product-card"
+          :class="{ 'highlight-fruit': p.category === 'Fruit' }"
+        >
+          <span class="category-tag">{{ p.category }}</span>
+          <h4>{{ p.title }}</h4>
+          <button @click="removeProduct(p.id)" class="btn-del">Delete</button>
+        </div>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        isPanelVisible: true
-      }
+export default {
+  data() {
+    return {
+      newProductName: '',
+      newProductCategory: 'Fruit',
+      products: [
+        { id: 1, title: 'Apple', category: 'Fruit' },
+        { id: 2, title: 'Carrot', category: 'Vegetable' }
+      ]
+    }
+  },
+  methods: {
+    addProduct() {
+      if (!this.newProductName.trim()) return;
+      this.products.push({ id: Date.now(), title: this.newProductName, category: this.newProductCategory });
+      this.newProductName = '';
+    },
+    removeProduct(id) {
+      this.products = this.products.filter(p => p.id !== id);
     }
   }
+}
 </script>
 
 <style scoped>
-  .lab-03 {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 30px;
-    font-family:sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 15px;
+  .lab-03 { 
+    max-width: 600px; 
+    margin: 20px auto; 
+    padding: 30px; 
+    font-family: sans-serif; 
+    background-color: #f9f9f9; 
+    border-radius: 15px; 
   }
   h2 { 
     border-left: 5px solid #42b983; 
@@ -42,29 +68,63 @@
     color: #2c3e50; 
     margin-bottom: 20px; 
   }
-  .controls button { 
-    width: 100%;
-    padding: 10px; 
-    background-color: #42b983; 
-    color: white; 
-    border: none; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    font-weight: bold; }
-  .panel { 
-    padding: 20px; 
-    margin-top: 15px; 
+  .input-card { 
+    display: flex; 
+    gap: 10px; 
+    margin-bottom: 25px; 
+    background: white; 
+    padding: 15px; 
     border-radius: 10px; 
-    line-height: 1.6; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
   }
-  .panel-if { 
-    background-color: #e3f2fd; 
-    color: #1976d2; 
-    border: 1px solid #bbdefb;
+  .custom-input { 
+    flex: 2; 
+    padding: 8px; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
   }
-  .panel-show { 
-    background-color: #f1f8e9; 
-    color: #388e3c; 
-    border: 1px solid #dcedc8; 
+  .custom-select { 
+    flex: 1; 
+    padding: 8px; 
+    border-radius: 5px; 
+  }
+  .btn-add { 
+    background: #2c3e50; 
+    color: white; 
+    padding: 8px 15px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+  }
+  .product-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px; 
+  }
+  .product-card { 
+    background: white; 
+    padding: 15px; 
+    border-radius: 10px; 
+    border: 1px solid #eee; 
+    position: relative; 
+  }
+  .highlight-fruit { 
+    border: 2px solid #42b983; 
+    background-color: #f0fff4; 
+  }
+  .category-tag { 
+    font-size: 0.7em; 
+    color: #888; 
+    text-transform: uppercase; 
+  }
+  .btn-del { 
+    width: 100%; 
+    margin-top: 10px; 
+    background: #fff0f0; 
+    color: #ff6b6b; 
+    border: 1px solid #ff6b6b; 
+    cursor: pointer; 
+    padding: 4px; 
+    border-radius: 4px; 
   }
 </style>
