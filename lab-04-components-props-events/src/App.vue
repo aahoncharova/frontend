@@ -1,26 +1,25 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="app-container">
+    <h1>Vue Task Manager</h1>
+    <ItemForm />
+    <ItemList :tasks="tasks" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ItemForm from './components/ItemForm.vue';
+import ItemList from './components/ItemList.vue';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  components: { ItemForm, ItemList },
+  data() {
+    return {
+      tasks: [
+        { id: 1, title: 'Learn Props', completed: true },
+        { id: 2, title: 'Understand Emits', completed: false },
+        { id: 3, title: 'Component Communication', completed: false }
+      ]
+    }
   }
-}
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
