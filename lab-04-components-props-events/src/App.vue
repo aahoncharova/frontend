@@ -20,6 +20,15 @@
           { id: 3, title: 'Component Communication', completed: false }
         ]
       }
+    },
+    methods: {
+    addTask(title) {
+      this.tasks.push({
+        id: Date.now(),
+        title,
+        completed: false
+      });
     }
+  }
   };
 </script>
