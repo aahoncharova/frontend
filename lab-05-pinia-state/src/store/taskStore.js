@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
+import { watch } from 'vue'
 
 export const useTaskStore = defineStore('taskStore', {
   state: () => ({
-    tasks: [],
+    tasks: JSON.parse(localStorage.getItem('my-tasks')) || [],
     filter: 'all'
-
   }),
   actions: {
     addTask(title) {
@@ -23,13 +23,30 @@ export const useTaskStore = defineStore('taskStore', {
     }
   },
   getters: {
-    filteredTasks() {
-        if (this.filter === 'done') return this.tasks.filter(t => t.done)
-        if (this.filter === 'active') return this.tasks.filter(t => !t.done)
-        return this.tasks
+    filteredTasks(state) {
+      if (state.filter === 'done') return state.tasks.filter(t => t.done)
+      if (state.filter === 'active') return state.tasks.filter(t => !t.done)
+      return state.tasks
     },
     totalCount: (state) => state.tasks.length,
     doneCount: (state) => state.tasks.filter(t => t.done).length,
     activeCount: (state) => state.tasks.filter(t => !t.done).length
   }
 })
+
+import { getActivePinia } from 'pinia'
+let store
+try {
+  store = useTaskStore(getActivePinia())
+} catch (e) {
+  store = null
+}
+if (store) {
+  watch(
+    () => store.tasks,
+    (newTasks) => {
+      localStorage.setItem('my-tasks', JSON.stringify(newTasks))
+    },
+    { deep: true }
+  )
+}

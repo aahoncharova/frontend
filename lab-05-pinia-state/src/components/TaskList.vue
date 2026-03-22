@@ -1,6 +1,6 @@
 <template>
   <div class="task-list">
-    <div v-for="task in taskStore.tasks" :key="task.id" class="task-item">
+    <div v-for="task in taskStore.filteredTasks" :key="task.id" class="task-item">
       <span :class="{ done: task.done }">{{ task.title }}</span>
       <button @click="taskStore.toggleTask(task.id)">Check</button>
       <button @click="taskStore.removeTask(task.id)">Delete</button>
