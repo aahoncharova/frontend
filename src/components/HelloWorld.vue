@@ -1,29 +1,27 @@
 <template>
   <div class="lab-03">
     <section class="task-section">
-      <h2>Task 3: Product List</h2>
-      
-      <div class="input-card">
-        <input v-model="newProductName" placeholder="Назва товару..." class="custom-input">
-        <select v-model="newProductCategory" class="custom-select">
+      <h2>Task 4: Dynamic Filtering</h2>
+
+      <div class="filter-bar">
+        <select v-model="filter" class="custom-select">
+          <option value="all">All categories</option>
           <option value="Fruit">Fruit</option>
           <option value="Vegetable">Vegetable</option>
         </select>
-        <button @click="addProduct" class="btn-add">Add</button>
+        <div class="badge">Shown {{ filteredProducts.length }} of {{ products.length }}</div>
       </div>
 
-      <div class="product-grid">
-        <div 
-          v-for="p in products" 
-          :key="p.id" 
-          class="product-card"
-          :class="{ 'highlight-fruit': p.category === 'Fruit' }"
-        >
-          <span class="category-tag">{{ p.category }}</span>
-          <h4>{{ p.title }}</h4>
-          <button @click="removeProduct(p.id)" class="btn-del">Delete</button>
-        </div>
+      <div v-if="filteredProducts.length === 0" class="empty-msg">
+        🔍 No items found with this filter
       </div>
+
+      <ul v-else class="item-list">
+        <li v-for="p in filteredProducts" :key="p.id">
+          <span>{{ p.title }}</span>
+          <span class="tag">{{ p.category }}</span>
+        </li>
+      </ul>
     </section>
   </div>
 </template>
@@ -32,22 +30,19 @@
 export default {
   data() {
     return {
-      newProductName: '',
-      newProductCategory: 'Fruit',
+      filter: 'all',
       products: [
         { id: 1, title: 'Apple', category: 'Fruit' },
-        { id: 2, title: 'Carrot', category: 'Vegetable' }
+        { id: 2, title: 'Carrot', category: 'Vegetable' },
+        { id: 3, title: 'Banana', category: 'Fruit' },
+        { id: 4, title: 'Tomato', category: 'Vegetable' }
       ]
     }
   },
-  methods: {
-    addProduct() {
-      if (!this.newProductName.trim()) return;
-      this.products.push({ id: Date.now(), title: this.newProductName, category: this.newProductCategory });
-      this.newProductName = '';
-    },
-    removeProduct(id) {
-      this.products = this.products.filter(p => p.id !== id);
+  computed: {
+    filteredProducts() {
+      if (this.filter === 'all') return this.products;
+      return this.products.filter(p => p.category === this.filter);
     }
   }
 }
@@ -68,63 +63,49 @@ export default {
     color: #2c3e50; 
     margin-bottom: 20px; 
   }
-  .input-card { 
+  .filter-bar { 
     display: flex; 
-    gap: 10px; 
-    margin-bottom: 25px; 
-    background: white; 
-    padding: 15px; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: #eee; 
+    padding: 12px; 
     border-radius: 10px; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-  }
-  .custom-input { 
-    flex: 2; 
-    padding: 8px; 
-    border: 1px solid #ddd; 
-    border-radius: 5px; 
+    margin-bottom: 20px; 
   }
   .custom-select { 
-    flex: 1; 
-    padding: 8px; 
+    padding: 6px; 
     border-radius: 5px; 
   }
-  .btn-add { 
-    background: #2c3e50; 
-    color: white; 
-    padding: 8px 15px; 
-    border: none; 
-    border-radius: 5px; 
-    cursor: pointer; 
+  .badge { 
+    font-weight: bold; 
+    color: #555; 
+    font-size: 0.9em; 
   }
-  .product-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 15px; 
+  .empty-msg { 
+    text-align: center; 
+    color: #999; 
+    margin-top: 30px; 
+    font-style: italic; 
   }
-  .product-card { 
+  .item-list { 
+    list-style: none; 
+    padding: 0; 
+  }
+  .item-list li { 
     background: white; 
+    margin-bottom: 10px; 
     padding: 15px; 
-    border-radius: 10px; 
-    border: 1px solid #eee; 
-    position: relative; 
+    border-radius: 8px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
   }
-  .highlight-fruit { 
-    border: 2px solid #42b983; 
-    background-color: #f0fff4; 
-  }
-  .category-tag { 
-    font-size: 0.7em; 
-    color: #888; 
-    text-transform: uppercase; 
-  }
-  .btn-del { 
-    width: 100%; 
-    margin-top: 10px; 
-    background: #fff0f0; 
-    color: #ff6b6b; 
-    border: 1px solid #ff6b6b; 
-    cursor: pointer; 
-    padding: 4px; 
-    border-radius: 4px; 
+  .tag { 
+    background: #42b983; 
+    color: white; 
+    padding: 2px 10px; 
+    border-radius: 20px; 
+    font-size: 0.8em; 
   }
 </style>
