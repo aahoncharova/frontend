@@ -12,6 +12,13 @@ export const usePostsStore = defineStore('posts', {
     limit: 6,
     query: ''
   }),
+  getters: {
+    filteredItems: (state) => {
+      const q = state.query.trim().toLowerCase()
+      if (!q) return state.items
+      return state.items.filter((post) => post.title.toLowerCase().includes(q))
+    }
+  },
   actions: {
     async fetchItems() {
       const requestId = ++activeRequestId
