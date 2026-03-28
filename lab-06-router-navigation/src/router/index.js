@@ -13,7 +13,8 @@ const routes = [
       { path: 'info', component: () => import('../views/ProfileInfo.vue') },
       { path: 'settings', component: () => import('../views/ProfileSettings.vue') }
     ]
-  }
+  },
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('../views/NotFoundView.vue') }
 ]
 
 const router = createRouter({
