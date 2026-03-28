@@ -1,19 +1,32 @@
 <template>
-  <form @submit.prevent="submitForm" class="auth-form">
-    <input v-model="form.name" type="text" placeholder="Name" required />
-    <input v-model="form.email" type="email" placeholder="Email" required />
-    <input v-model="form.password" type="password" placeholder="Password" required />
-    <input v-model="form.confirmPassword" type="password" placeholder="Confirm Password" required />
-    <input v-model.number="form.age" type="number" min="0" placeholder="Age" required />
+  <form @submit.prevent="submitForm" class="auth-form" novalidate>
+    <input v-model="form.name" type="text" placeholder="Name" />
+    <div v-if="errors.name" class="error-msg">{{ errors.name }}</div>
+
+    <input v-model="form.email" type="email" placeholder="Email" />
+    <div v-if="errors.email" class="error-msg">{{ errors.email }}</div>
+
+    <input v-model="form.password" type="password" placeholder="Password" />
+    <div v-if="errors.password" class="error-msg">{{ errors.password }}</div>
+
+    <input v-model="form.confirmPassword" type="password" placeholder="Confirm Password" />
+    <div v-if="errors.confirmPassword" class="error-msg">{{ errors.confirmPassword }}</div>
+
+    <input v-model.number="form.age" type="number" min="0" placeholder="Age" />
+    <div v-if="errors.age" class="error-msg">{{ errors.age }}</div>
+
     <label class="checkbox-label">
-      <input v-model="form.agree" type="checkbox" required />
+      <input v-model="form.agree" type="checkbox" />
       I agree to the terms
     </label>
+    <div v-if="errors.agree" class="error-msg">{{ errors.agree }}</div>
+
     <button type="submit">Send</button>
   </form>
 </template>
 
 <script setup>
+import { useValidator } from '../composables/useValidator'
 import { reactive } from 'vue'
 
 const form = reactive({
@@ -25,7 +38,10 @@ const form = reactive({
   agree: false
 })
 
+const { errors, validateAll } = useValidator()
+
 function submitForm() {
+  if (!validateAll(form)) return
   console.log('Form submitted:', { ...form })
 }
 </script>
@@ -66,5 +82,12 @@ function submitForm() {
 }
 .auth-form button:hover {
   background: #2c8c6b;
+}
+
+.error-msg {
+  color: #c0392b;
+  font-size: 0.98rem;
+  margin: -10px 0 8px 2px;
+  padding-left: 2px;
 }
 </style>
