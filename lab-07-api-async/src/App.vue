@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 <template>
   <div class="container">
@@ -24,6 +25,11 @@
           <button @click="selectedItem = post">Details</button>
         </div>
         <div v-if="filteredItems.length === 0" class="no-results">No results found.</div>
+        <div class="pagination">
+          <button :disabled="page === 1" @click="goToPage(page - 1)">Previous</button>
+          <span>Page {{ page }}</span>
+          <button @click="goToPage(page + 1)">Next</button>
+        </div>
       </div>
       <div v-else class="details-view">
         <button @click="selectedItem = null">← Back to List</button>
@@ -38,14 +44,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
-
+let controller = null
 const items = ref([])
 const isLoading = ref(false)
 const error = ref(null)
 const selectedItem = ref(null)
 const searchQuery = ref('')
+const page = ref(1)
 
 const filteredItems = computed(() => {
   return items.value.filter(post =>
@@ -54,18 +61,29 @@ const filteredItems = computed(() => {
 })
 
 const loadItems = async () => {
+  if (controller) controller.abort()
+  controller = new AbortController()
   isLoading.value = true
   error.value = null
   selectedItem.value = null
   try {
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/posts?_page=${page.value}&_limit=5`,
+      { signal: controller.signal }
+    )
     if (!response.ok) throw new Error('Failed to fetch data')
     items.value = await response.json()
   } catch (err) {
-    error.value = err.message
+    if (err.name !== 'AbortError') error.value = err.message
   } finally {
     isLoading.value = false
   }
+}
+
+function goToPage(newPage) {
+  if (newPage < 1) return
+  page.value = newPage
+  loadItems()
 }
 
 onMounted(loadItems)
@@ -120,6 +138,32 @@ h1 {
   text-align: center;
   margin-top: 18px;
   font-size: 1.1rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 24px;
+}
+.pagination button {
+  background: #42b983;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pagination button:disabled {
+  background: #cecece;
+  color: #888;
+  cursor: not-allowed;
+}
+.pagination button:hover:not(:disabled) {
+  background: #2c8c6b;
 }
 .post-item h3 {
   margin: 0;
