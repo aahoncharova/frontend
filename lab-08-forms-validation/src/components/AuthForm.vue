@@ -1,27 +1,27 @@
 <template>
   <form @submit.prevent="submitForm" class="auth-form" novalidate>
     <input v-model="form.name" type="text" placeholder="Name" @blur="onBlur('name')" />
-    <div v-if="touched.name && errors.name" class="error-msg">{{ errors.name }}</div>
+    <Transition name="fade-error"><div v-if="touched.name && errors.name" class="error-msg">{{ errors.name }}</div></Transition>
 
     <input v-model="form.email" type="email" placeholder="Email" @blur="onBlur('email')" />
-    <div v-if="touched.email && errors.email" class="error-msg">{{ errors.email }}</div>
+    <Transition name="fade-error"><div v-if="touched.email && errors.email" class="error-msg">{{ errors.email }}</div></Transition>
 
     <input v-model="form.password" type="password" placeholder="Password" @blur="onBlur('password')" />
-    <div v-if="touched.password && errors.password" class="error-msg">{{ errors.password }}</div>
+    <Transition name="fade-error"><div v-if="touched.password && errors.password" class="error-msg">{{ errors.password }}</div></Transition>
 
     <input v-model="form.confirmPassword" type="password" placeholder="Confirm Password" @blur="onBlur('confirmPassword')" />
-    <div v-if="touched.confirmPassword && errors.confirmPassword" class="error-msg">{{ errors.confirmPassword }}</div>
+    <Transition name="fade-error"><div v-if="touched.confirmPassword && errors.confirmPassword" class="error-msg">{{ errors.confirmPassword }}</div></Transition>
 
     <input v-model.number="form.age" type="number" min="0" placeholder="Age" @blur="onBlur('age')" />
-    <div v-if="touched.age && errors.age" class="error-msg">{{ errors.age }}</div>
+    <Transition name="fade-error"><div v-if="touched.age && errors.age" class="error-msg">{{ errors.age }}</div></Transition>
 
     <label class="checkbox-label">
       <input v-model="form.agree" type="checkbox" @blur="onBlur('agree')" />
       I agree to the terms
     </label>
-    <div v-if="touched.agree && errors.agree" class="error-msg">{{ errors.agree }}</div>
+    <Transition name="fade-error"><div v-if="touched.agree && errors.agree" class="error-msg">{{ errors.agree }}</div></Transition>
 
-    <div v-if="successMsg" class="success-msg">{{ successMsg }}</div>
+    <Transition name="fade-msg"><div v-if="successMsg" class="success-msg">{{ successMsg }}</div></Transition>
     <button type="submit" :disabled="isSubmitting">{{ isSubmitting ? 'Sending...' : 'Send' }}</button>
   </form>
 </template>
@@ -149,6 +149,28 @@ function submitForm() {
   font-size: 0.98rem;
   margin: -10px 0 8px 2px;
   padding-left: 2px;
+}
+
+/* Fade transition for error messages */
+.fade-error-enter-active, .fade-error-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-error-enter-from, .fade-error-leave-to {
+  opacity: 0;
+}
+.fade-error-enter-to, .fade-error-leave-from {
+  opacity: 1;
+}
+
+/* Fade transition for success message */
+.fade-msg-enter-active, .fade-msg-leave-active {
+  transition: opacity 0.4s;
+}
+.fade-msg-enter-from, .fade-msg-leave-to {
+  opacity: 0;
+}
+.fade-msg-enter-to, .fade-msg-leave-from {
+  opacity: 1;
 }
 
 .success-msg {
