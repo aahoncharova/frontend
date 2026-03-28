@@ -12,10 +12,10 @@
       >
     </div>
 
-    <div v-if="isLoading" class="loader">Loading...</div>
+    <div v-if="isLoading" class="loader">Завантаження...</div>
 
     <div v-else-if="error" class="error-card">
-      <p>Error: {{ error }}</p>
+      <p>Помилка: {{ error }}</p>
       <button @click="postsStore.fetchItems()">Try Again</button>
     </div>
 
@@ -25,7 +25,7 @@
         <h3>{{ post.title }}</h3>
       </article>
     </div>
-    <div v-if="!isLoading && !error && items.length === 0">No data found.</div>
+    <div v-if="!isLoading && !error && items.length === 0">Немає даних</div>
     
     <div class="pagination">
       <button :disabled="isLoading || page <= 1" @click="goPrev">Previous</button>
