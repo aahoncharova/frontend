@@ -10,7 +10,20 @@
       <button @click="loadItems">Try Again</button>
     </div>
 
+
     <div v-else-if="items.length > 0">
+      <div v-if="!selectedItem">
+        <div v-for="post in items" :key="post.id" class="post-item">
+          <h3>{{ post.title }}</h3>
+          <button @click="selectedItem = post">Деталі</button>
+        </div>
+      </div>
+      <div v-else class="details-view">
+        <button @click="selectedItem = null">← Назад до списку</button>
+        <h2>{{ selectedItem.title }}</h2>
+        <p>{{ selectedItem.body }}</p>
+        <small>Post ID: {{ selectedItem.id }}</small>
+      </div>
     </div>
 
     <div v-else>No data found.</div>
@@ -23,10 +36,12 @@ import { ref, onMounted } from 'vue'
 const items = ref([])
 const isLoading = ref(false)
 const error = ref(null)
+const selectedItem = ref(null)
 
 const loadItems = async () => {
   isLoading.value = true
   error.value = null
+  selectedItem.value = null
   try {
     const response = await fetch('https://jsonplaceholder.typicode.com/posts')
     if (!response.ok) throw new Error('Failed to fetch data')
@@ -61,6 +76,69 @@ h1 {
   font-size: 1.2rem;
   text-align: center;
   margin: 32px 0;
+}
+.post-item {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 1px 4px rgba(66,185,131,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.post-item h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #222;
+}
+.post-item button {
+  background: #42b983;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.post-item button:hover {
+  background: #2c8c6b;
+}
+.details-view {
+  background: #f8fafc;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(66,185,131,0.08);
+  padding: 32px 40px 24px 40px;
+  margin: 32px auto;
+  max-width: 500px;
+  text-align: center;
+}
+.details-view button {
+  background: #42b983;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 18px;
+  transition: background 0.2s;
+}
+.details-view button:hover {
+  background: #2c8c6b;
+}
+.details-view h2 {
+  color: #42b983;
+  margin-bottom: 12px;
+}
+.details-view p {
+  color: #444;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+.details-view small {
+  color: #888;
 }
 .error-card {
   background: #ffeaea;
