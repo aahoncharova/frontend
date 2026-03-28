@@ -13,13 +13,20 @@
 
     <div v-else-if="items.length > 0">
       <div v-if="!selectedItem">
-        <div v-for="post in items" :key="post.id" class="post-item">
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search..."
+          class="search-input"
+        />
+        <div v-for="post in filteredItems" :key="post.id" class="post-item">
           <h3>{{ post.title }}</h3>
-          <button @click="selectedItem = post">Деталі</button>
+          <button @click="selectedItem = post">Details</button>
         </div>
+        <div v-if="filteredItems.length === 0" class="no-results">No results found.</div>
       </div>
       <div v-else class="details-view">
-        <button @click="selectedItem = null">← Назад до списку</button>
+        <button @click="selectedItem = null">← Back to List</button>
         <h2>{{ selectedItem.title }}</h2>
         <p>{{ selectedItem.body }}</p>
         <small>Post ID: {{ selectedItem.id }}</small>
@@ -31,12 +38,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+
 
 const items = ref([])
 const isLoading = ref(false)
 const error = ref(null)
 const selectedItem = ref(null)
+const searchQuery = ref('')
+
+const filteredItems = computed(() => {
+  return items.value.filter(post =>
+    post.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
 
 const loadItems = async () => {
   isLoading.value = true
@@ -86,6 +101,25 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.search-input {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 22px;
+  border: 1px solid #b2f2dd;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+.search-input:focus {
+  border: 1.5px solid #42b983;
+}
+.no-results {
+  color: #888;
+  text-align: center;
+  margin-top: 18px;
+  font-size: 1.1rem;
 }
 .post-item h3 {
   margin: 0;
